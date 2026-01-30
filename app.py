@@ -72,10 +72,10 @@ def predictRoute():
         
         logger.info(f"Processing image: {input_path}")
         
-        # Run YOLO11 prediction
+       
         results = clApp.model.predict(
             source=str(input_path),
-            conf=0.25,  # Confidence threshold
+            conf=0.50,  # Confidence threshold
             iou=0.7,    # IoU threshold for NMS
             save=True,  # Save annotated image
             project='runs/detect',
