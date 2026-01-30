@@ -2,7 +2,7 @@ from ultralytics import YOLO
 import cv2
 import time
 
-def live_detection(model_path='models/best.pt', confidence=0.25):
+def live_detection(model_path='models/best.pt', confidence=0.50):
     """
     Run live defect detection with terminal statistics
     """
@@ -99,7 +99,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Live defect detection')
     parser.add_argument('--model', type=str, default='../weights/best.pt', 
                         help='Path to model weights')
-    parser.add_argument('--conf', type=float, default=0.25, 
+    parser.add_argument('--conf', type=float, default=0.50, 
                         help='Confidence threshold')
     parser.add_argument('--source', type=int, default=0, 
                         help='Camera source (0=default, 1=external)')
