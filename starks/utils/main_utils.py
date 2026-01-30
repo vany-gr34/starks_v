@@ -2,6 +2,7 @@ import os.path
 import sys
 import yaml
 import base64
+from pathlib import Path
 
 from starks.exception import AppException
 from starks.logger import logging
@@ -39,10 +40,13 @@ def write_yaml_file(file_path: str, content: object, replace: bool = False) -> N
 
 def decodeImage(imgstring, fileName):
     imgdata = base64.b64decode(imgstring)
-    with open("./data/" + fileName, 'wb') as f:
+    file_path = Path(fileName)
+    file_path.parent.mkdir(parents=True, exist_ok=True)
+    
+    with open(fileName, 'wb') as f:
         f.write(imgdata)
-        f.close()
-
+    
+    logging.info(f"Image decoded and saved to: {fileName}")
 
 def encodeImageIntoBase64(croppedImagePath):
     with open(croppedImagePath, "rb") as f:
