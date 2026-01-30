@@ -53,5 +53,6 @@ setuptools>=65.5.1  # Snyk vulnerability fix
 # albumentations>=1.0.3  # training augmentations
 # pycocotools>=2.0.6  # COCO mAP
 # roboflow  # Roboflow integration
-
+ultralytics
+cv2
 -e .
