@@ -1,4 +1,4 @@
-# EagleScanAI - Industrial Defect Detection System 🦅
+# EagleScanAI - Industrial Defect Detection System 
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
 [![YOLO](https://img.shields.io/badge/YOLO-v11-green.svg)](https://ultralytics.com)
@@ -7,7 +7,7 @@
 
 A state-of-the-art computer vision system for real-time industrial defect detection using YOLO11 architecture. EagleScanAI provides both web-based and programmatic interfaces for defect detection in manufacturing environments.
 
-## 🎯 Project Overview
+## Project Overview
 
 EagleScanAI is designed as a complete MLOps solution for industrial quality control. It combines computer vision, web technologies, and machine learning pipelines to deliver accurate, real-time defect detection capabilities.
 
@@ -20,7 +20,7 @@ The system detects 6 major types of surface defects commonly found in manufactur
 - **Rolled-in Scale**: Scale marks from rolling process
 - **Scratches**: Linear surface damage
 
-## 🏗️ Architecture & Design Philosophy
+##  Architecture & Design Philosophy
 
 ### System Architecture
 ```
@@ -102,7 +102,7 @@ Endpoints:
     Logic:          # Pipeline orchestration → Model artifacts
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 ```bash
@@ -143,7 +143,7 @@ curl http://localhost:8080/health
 curl http://localhost:8080/model-info
 ```
 
-## 📖 Usage Guide
+##  Usage Guide
 
 ### 1. Web Interface Usage
 
@@ -254,13 +254,13 @@ export STARKS_LOG_LEVEL="INFO"
 ```
 starks_v/
 │
-├── 🌐 **Web Application Layer**
+├── **Web Application Layer**
 │   ├── app.py                    # Flask web server & API endpoints
 │   ├── templates/
 │   │   └── index.html           # Web interface
 │   └── static/                  # CSS, JS, images
 │
-├── 🧠 **Core ML Package** (`starks/`)
+├──  **Core ML Package** (`starks/`)
 │   ├── components/              # Training pipeline components
 │   │   ├── data_ingestion.py   # Dataset download & extraction
 │   │   ├── data_validation.py  # Data quality validation
@@ -282,11 +282,11 @@ starks_v/
 │   ├── logger/                  # Logging system
 │   └── exception/              # Custom exception handling
 │
-├── 🎯 **Standalone Scripts** (`src/`)
+├──  **Standalone Scripts** (`src/`)
 │   ├── predict.py              # Batch prediction utility
 │   └── live.py                # Real-time detection utility
 │
-├── 📊 **Model & Data**
+├──  **Model & Data**
 │   ├── weights/                # Trained model weights
 │   │   ├── best.pt            # Best model checkpoint
 │   │   └── last.pt            # Latest training checkpoint
@@ -294,12 +294,12 @@ starks_v/
 │   ├── test_images/           # Sample test images
 │   └── data.yaml             # Dataset configuration
 │
-├── 🐳 **Deployment**
+├──  **Deployment**
 │   ├── Dockerfile            # Container definition
 │   ├── requirements.txt      # Python dependencies
 │   └── setup.py             # Package setup configuration
 │
-└── 📚 **Documentation**
+└──  **Documentation**
     ├── README.md            # This file
     ├── LICENSE             # MIT license
     └── reseach/            # Jupyter notebooks & experiments
@@ -315,7 +315,7 @@ starks_v/
 | **Models** | AI artifacts | `weights/`, `data.yaml` |
 | **Deployment** | Production setup | `Dockerfile`, `requirements.txt` |
 
-## 🚀 Deployment Options
+##  Deployment Options
 
 ### Local Development
 ```bash
@@ -395,7 +395,7 @@ YOLO('yolo11m.pt')  # Accurate (medium)
 YOLO('yolo11l.pt')  # Most accurate (large)
 ```
 
-## 🤝 Contributing
+##Contributing
 
 ### Development Setup
 ```bash
@@ -416,11 +416,11 @@ flake8 starks/ src/
 3. Retrain model with expanded dataset
 4. Update web interface labels
 
-## 📄 License
+##  License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 - **Ultralytics YOLO** for the core detection framework
 - **Flask** for the web application framework
