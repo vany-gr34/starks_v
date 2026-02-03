@@ -1,16 +1,16 @@
 import sys, os
-from starks.logger import logging
-from starks.exception import AppException
-from starks.components.data_ingestion import DataIngestion
-from starks.components.data_validation import DataValidation
-from starks.components.model_trainer import ModelTrainer
+from eaglescan.logger import logging
+from eaglescan.exception import AppException
+from eaglescan.components.data_ingestion import DataIngestion
+from eaglescan.components.data_validation import DataValidation
+from eaglescan.components.model_trainer import ModelTrainer
 
 
-from starks.entity.config_entity import (DataIngestionConfig,
+from eaglescan.entity.config_entity import (DataIngestionConfig,
                                                  DataValidationConfig,
                                                  ModelTrainerConfig)
 
-from starks.entity.artifacts_entity import (DataIngestionArtifact,
+from eaglescan.entity.artifacts_entity import (DataIngestionArtifact,
                                                     DataValidationArtifact,
                                                     ModelTrainerArtifact)
 

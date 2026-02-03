@@ -1,11 +1,11 @@
 import sys
 import os
 from pathlib import Path
-from starks.pipeline.training_pipeline import TrainPipeline
-from starks.utils.main_utils import decodeImage, encodeImageIntoBase64
+from eaglescan.pipeline.training_pipeline import TrainPipeline
+from eaglescan.utils.main_utils import decodeImage, encodeImageIntoBase64
 from flask import Flask, request, jsonify, render_template, Response
 from flask_cors import CORS, cross_origin
-from starks.constant.application import APP_HOST, APP_PORT
+from eaglescan.constant.application import APP_HOST, APP_PORT
 from ultralytics import YOLO
 import logging
 
@@ -20,7 +20,7 @@ CORS(app)
 class ClientApp:
     def __init__(self):
         self.filename = "inputImage.jpg"
-        self.model_path = "weights/best.pt"  
+        self.model_path = "models/best.pt"  
         self.model = None
         self.load_model()
     

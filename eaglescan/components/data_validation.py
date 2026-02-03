@@ -1,9 +1,9 @@
 import os,sys
 import shutil
-from starks.logger import logging
-from starks.exception import AppException
-from starks.entity.config_entity import DataValidationConfig
-from starks.entity.artifacts_entity import (DataIngestionArtifact,
+from eaglescan.logger import logging
+from eaglescan.exception import AppException
+from eaglescan.entity.config_entity import DataValidationConfig
+from eaglescan.entity.artifacts_entity import (DataIngestionArtifact,
                                                  DataValidationArtifact)
 
 

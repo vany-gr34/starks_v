@@ -1,7 +1,7 @@
 import os
 from dataclasses import dataclass
 from datetime import datetime
-from starks.constant.training_pipeline import *
+from eaglescan.constant.training_pipeline import *
 
 
 

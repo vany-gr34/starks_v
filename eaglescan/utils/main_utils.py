@@ -4,8 +4,8 @@ import yaml
 import base64
 from pathlib import Path
 
-from starks.exception import AppException
-from starks.logger import logging
+from eaglescan.exception import AppException
+from eaglescan.logger import logging
 
 
 def read_yaml_file(file_path: str) -> dict:
