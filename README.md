@@ -1,15 +1,15 @@
-# EagleScanAI - Industrial Defect Detection System 
+# EagleScanAI - Industrial Defect Detection System 🦅
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
 [![YOLO](https://img.shields.io/badge/YOLO-v11-green.svg)](https://ultralytics.com)
 [![Flask](https://img.shields.io/badge/Flask-2.0+-red.svg)](https://flask.palletsprojects.com)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-A state-of-the-art computer vision system for real-time industrial defect detection using YOLO11 architecture. EagleScanAI provides both web-based and programmatic interfaces for defect detection in manufacturing environments.
+A state-of-the-art computer vision system for real-time industrial defect detection using YOLOv11 architecture. EagleScanAI provides both web-based and programmatic interfaces for defect detection in manufacturing environments.
 
-## Project Overview
+## 🎯 Project Overview
 
-EagleScanAI is designed as a complete MLOps solution for industrial quality control. It combines computer vision, web technologies, and machine learning pipelines to deliver accurate, real-time defect detection capabilities.
+EagleScanAI is designed as a complete MLOps solution for industrial quality control. It combines computer vision, web technologies, and machine learning pipelines to deliver accurate, real-time defect detection capabilities for manufacturing environments.
 
 ### Supported Defect Types
 The system detects 6 major types of surface defects commonly found in manufacturing:
@@ -20,239 +20,107 @@ The system detects 6 major types of surface defects commonly found in manufactur
 - **Rolled-in Scale**: Scale marks from rolling process
 - **Scratches**: Linear surface damage
 
-##  Architecture & Design Philosophy
+## 🏗️ Key Features
 
-### System Architecture
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Client Layer   │    │  Service Layer  │    │   Core Layer    │
-├─────────────────┤    ├─────────────────┤    ├─────────────────┤
-│ • Web Interface  │    │ • Flask API     │    │ • YOLO11 Model  │
-│ • REST API      │────▶│ • Route Handlers│────▶│ • Data Pipeline │
-│ • Live Camera   │    │ • Image Encoding│    │ • Training Logic│
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-```
+### Core Capabilities
+- **Real-time Detection**: Live camera-based defect detection with instant feedback
+- **Web Interface**: Intuitive drag-and-drop interface for image upload and analysis
+- **REST API**: Complete API for integration with existing systems
+- **Batch Processing**: Process multiple images efficiently
+- **Custom Training**: Train on your own defect datasets
+- **Health Monitoring**: Built-in system health checks and model status
 
-### Design Principles
+### Technical Features
+- **YOLOv11 Architecture**: Latest YOLO model for superior accuracy and speed
+- **Multi-format Support**: JPG, PNG image formats supported
+- **Confidence Scoring**: Adjustable confidence thresholds for detection sensitivity
+- **Base64 Encoding**: Seamless image transfer via API
+- **CORS Support**: Cross-origin requests enabled for web integration
+- **Automated Pipeline**: Complete training pipeline with data validation
+- **Google Drive Integration**: Automatic dataset download and management
 
-1. **Modular Architecture**: Each component has a single responsibility
-2. **Scalable Pipeline**: Easy to extend with new defect types
-3. **Real-time Performance**: Optimized for low-latency detection
-4. **DevOps Ready**: Containerized and cloud-deployable
-5. **Extensible Framework**: Plugin-based component system
-
-### Core Components Logic
-
-#### 1. **Training Pipeline** (`starks/pipeline/`)
-**Purpose**: Orchestrates the complete model training workflow
-**Logic**: 
-- **Data Ingestion**: Downloads and validates training data from cloud sources
-- **Data Validation**: Ensures data quality and format consistency
-- **Model Training**: Fine-tunes YOLO11 on custom defect dataset
-- **Artifact Management**: Tracks model versions and performance metrics
-
-```python
-# Training Flow
-DataIngestion → DataValidation → ModelTrainer → ArtifactStorage
-```
-
-#### 2. **Component System** (`starks/components/`)
-**Purpose**: Implements individual training stages as reusable components
-
-**Data Ingestion Component**:
-- Downloads datasets from Google Drive using authenticated APIs
-- Implements retry logic and progress tracking
-- Validates file integrity and format
-
-**Data Validation Component**:
-- Verifies YOLO annotation format
-- Checks class distribution and data quality
-- Generates validation reports
-
-**Model Trainer Component**:
-- Configures YOLO11 hyperparameters
-- Implements custom loss functions for defect detection
-- Handles GPU/CPU optimization
-
-#### 3. **Web Application Layer** (`app.py`)
-**Purpose**: Provides RESTful API and web interface
-**Logic**:
-- **Stateful Model Loading**: Singleton pattern ensures model loads once
-- **Async Processing**: Non-blocking image processing
-- **Error Handling**: Comprehensive exception management
-- **Resource Management**: Automatic cleanup of temporary files
-
-### API Architecture
-
-```yaml
-Endpoints:
-  /predict:         # Image-based defect detection
-    Input:          # Base64 encoded image
-    Output:         # Annotated image + detection metadata
-    Logic:          # YOLO inference → Post-processing → Response
-  
-  /live:            # Real-time camera detection
-    Input:          # Camera stream (source=0)
-    Output:         # Live detection window
-    Logic:          # Stream processing → Real-time inference
-  
-  /train:           # Model training trigger
-    Input:          # Training configuration
-    Output:         # Training status
-    Logic:          # Pipeline orchestration → Model artifacts
-```
-
-## Quick Start
+## 🚀 Quick Start
 
 ### Prerequisites
-```bash
-# System Requirements
-- Python 3.8+ (3.9+ recommended)
-- CUDA 11.8+ (for GPU acceleration)
-- 8GB+ RAM
+- Python 3.8 or higher
+- Modern web browser
 - Webcam (for live detection)
-```
+- 4GB+ RAM recommended
 
 ### Installation
-```bash
-# 1. Clone repository
-git clone <repository-url>
-cd starks_v
 
-# 2. Create virtual environment
-python -m venv venv
-venv\Scripts\activate  # Windows
-# source venv/bin/activate  # Linux/Mac
+1. **Clone the Repository**
+   - Download or clone the project to your local machine
 
-# 3. Install dependencies
-pip install -r requirements.txt
+2. **Set Up Environment**
+   - Create a virtual environment
+   - Install all required dependencies from `requirements.txt`
 
-# 4. Verify installation
-python -c "from ultralytics import YOLO; print('Setup complete!')"
-```
+3. **Start the Application**
+   - Run the Flask server using `python app.py`
+   - Access the web interface at `http://localhost:8080`
 
-### Quick Test
-```bash
-# Start web application
-python app.py
+4. **Verify Installation**
+   - Use the health check endpoint to confirm everything is working
+   - Test with sample images in the `demo_data/` folder
 
-# Test API health
-curl http://localhost:8080/health
+## 💻 Usage Options
 
-# Test model info
-curl http://localhost:8080/model-info
-```
+### Web Interface
+- **Upload Detection**: Drag and drop images for instant defect analysis
+- **Live Camera**: Real-time detection using your webcam
+- **Results Visualization**: View annotated images with detected defects
+- **Statistics Dashboard**: Monitor detection confidence and counts
 
-##  Usage Guide
+### Command Line Tools
+- **Batch Processing**: Process multiple images using standalone scripts
+- **Live Detection**: Terminal-based real-time detection with statistics
+- **Custom Parameters**: Adjust confidence thresholds and camera sources
 
-### 1. Web Interface Usage
+### REST API Integration
+- **Health Monitoring**: Check system and model status
+- **Image Prediction**: Send images via Base64 encoding for analysis
+- **Model Information**: Retrieve supported defect classes and model details
+- **Training Trigger**: Initiate custom model training remotely
 
-**Starting the Application**:
-```bash
-python app.py
-# Access: http://localhost:8080
-```
+## 📊 Detection Results
 
-**Web Features**:
-- **Upload Interface**: Drag-and-drop image upload
-- **Real-time Results**: Instant defect detection and visualization
-- **Batch Processing**: Multiple image upload support
-- **Detection Statistics**: Confidence scores and defect counts
+### Output Information
+Each detection provides:
+- **Defect Type**: Classification of the detected defect
+- **Confidence Score**: Detection reliability (0.0-1.0 scale)
+- **Bounding Box**: Precise location coordinates
+- **Visual Annotations**: Color-coded boxes on processed images
 
-### 2. API Integration
+### Confidence Interpretation
+- **High (0.8-1.0)**: Reliable defect detection
+- **Medium (0.5-0.8)**: Probable defect presence  
+- **Low (0.25-0.5)**: Possible defect requiring review
+- **Very Low (<0.25)**: Typically filtered out
 
-**Image Prediction**:
-```python
-import requests
-import base64
+## ⚙️ Configuration
 
-# Encode image
-with open('defect_image.jpg', 'rb') as f:
-    image_data = base64.b64encode(f.read()).decode()
+### Model Settings
+- Default confidence threshold: 0.50 (web interface), 0.25 (live detection)
+- IoU threshold: 0.7 for non-maximum suppression
+- Model path: `models/best.pt`
+- Supported formats: JPG, JPEG, PNG
 
-# Send prediction request
-response = requests.post('http://localhost:8080/predict', 
-                        json={'image': image_data})
-result = response.json()
+### Server Configuration
+- Host: `0.0.0.0` (all interfaces)
+- Port: `8080` (default)
+- CORS enabled for cross-origin requests
 
-# Access results
-print(f"Defects found: {result['count']}")
-for detection in result['detections']:
-    print(f"Type: {detection['class']}, Confidence: {detection['confidence']}")
-```
+### Custom Training
+- Dataset format: YOLO annotation style
+- Supported training parameters: epochs, batch size, image size
+- Automatic data validation before training
+- Google Drive integration for dataset management
 
-**Live Detection**:
-```python
-import requests
-
-# Start live camera detection
-response = requests.get('http://localhost:8080/live')
-# Camera window will open automatically
-```
-
-### 3. Standalone Scripts
-
-**Batch Image Processing**:
-```bash
-# Process single image
-python src/predict.py --image test_images/sample.jpg --conf 0.5
-
-# Process entire folder
-python src/predict.py --folder test_images/ --output results/
-```
-
-**Live Detection Script**:
-```bash
-# Start live detection with custom settings
-python src/live.py --model weights/best.pt --conf 0.3 --camera 0
-```
-
-### 4. Custom Training
-
-**Training New Models**:
-```bash
-# Using web API
-curl -X GET http://localhost:8080/train
-
-# Using Python script
-python train.py --epochs 100 --batch-size 16 --img-size 640
-```
-
-**Training Configuration**:
-```yaml
-# data.yaml structure
-path: ../dataset
-train: train/images
-val: val/images
-nc: 6  # Number of classes
-names: ['crazing', 'inclusion', 'patches', 'pitted_surface', 'rolled-in_scale', 'scratches']
-```
-
-## 🔧 Configuration
-
-### Model Configuration
-```python
-# starks/constant/application.py
-APP_HOST = "0.0.0.0"    # Server host
-APP_PORT = 8080         # Server port
-
-# Detection settings
-CONFIDENCE_THRESHOLD = 0.50  # Minimum confidence for detection
-IOU_THRESHOLD = 0.7         # Intersection over Union threshold
-```
-
-### Environment Variables
-```bash
-# Optional environment configuration
-export STARKS_MODEL_PATH="custom/path/to/model.pt"
-export STARKS_DATA_URL="https://drive.google.com/your-dataset"
-export STARKS_LOG_LEVEL="INFO"
-```
-
-## 📁 Project Structure Deep Dive
+## 📁 Project Structure
 
 ```
-starks_v/
+eaglescan_ai/
 │
 ├── **Web Application Layer**
 │   ├── app.py                    # Flask web server & API endpoints
@@ -260,11 +128,11 @@ starks_v/
 │   │   └── index.html           # Web interface
 │   └── static/                  # CSS, JS, images
 │
-├──  **Core ML Package** (`starks/`)
+├── **Core ML Package** (`eaglescan/`)
 │   ├── components/              # Training pipeline components
 │   │   ├── data_ingestion.py   # Dataset download & extraction
 │   │   ├── data_validation.py  # Data quality validation
-│   │   └── model_trainer.py    # YOLO11 training logic
+│   │   └── model_trainer.py    # YOLOv11 training logic
 │   │
 │   ├── pipeline/                # Orchestration logic
 │   │   └── training_pipeline.py # End-to-end training workflow
@@ -282,158 +150,147 @@ starks_v/
 │   ├── logger/                  # Logging system
 │   └── exception/              # Custom exception handling
 │
-├──  **Standalone Scripts** (`src/`)
+├── **Standalone Scripts** (`src/`)
 │   ├── predict.py              # Batch prediction utility
 │   └── live.py                # Real-time detection utility
 │
-├──  **Model & Data**
-│   ├── weights/                # Trained model weights
+├── **Model & Data**
+│   ├── models/                 # Trained model weights
 │   │   ├── best.pt            # Best model checkpoint
 │   │   └── last.pt            # Latest training checkpoint
 │   │
-│   ├── test_images/           # Sample test images
-│   └── data.yaml             # Dataset configuration
+│   ├── demo_data/             # Sample test images
+│   ├── config/data.yaml       # Dataset configuration
+│   └── evaluation/            # Model evaluation metrics
 │
-├──  **Deployment**
-│   ├── Dockerfile            # Container definition
-│   ├── requirements.txt      # Python dependencies
-│   └── setup.py             # Package setup configuration
-│
-└──  **Documentation**
-    ├── README.md            # This file
-    ├── LICENSE             # MIT license
-    └── reseach/            # Jupyter notebooks & experiments
+└── **Documentation & Deployment**
+    ├── docs/                  # Comprehensive documentation
+    ├── research/              # Jupyter notebooks & experiments
+    ├── Dockerfile            # Container definition
+    ├── requirements.txt      # Python dependencies
+    └── setup.py             # Package setup configuration
 ```
 
-### Component Responsibilities
-
-| Component | Purpose | Key Files |
-|-----------|---------|-----------|
-| **Web Layer** | User interface & API | `app.py`, `templates/` |
-| **Core ML** | Training & inference logic | `starks/` package |
-| **Scripts** | Standalone utilities | `src/predict.py`, `src/live.py` |
-| **Models** | AI artifacts | `weights/`, `data.yaml` |
-| **Deployment** | Production setup | `Dockerfile`, `requirements.txt` |
-
-##  Deployment Options
+## 🚢 Deployment Options
 
 ### Local Development
-```bash
-# Development server
-python app.py
-# Access: http://localhost:8080
-```
+- Start Flask development server
+- Access web interface at `http://localhost:8080`
+- Suitable for testing and development
 
 ### Docker Deployment
-```bash
-# Build container
-docker build -t eaglescanai .
-
-# Run container
-docker run -p 8080:8080 -v $(pwd)/weights:/app/weights eaglescanai
-```
+- Build containerized version for consistent deployment
+- Supports volume mounting for model weights
+- Ideal for production environments
 
 ### Cloud Deployment
-```bash
-# Azure Container Instances
-az container create --resource-group myRG --name eaglescanai \
-  --image your-registry/eaglescanai:latest --ports 8080
+- Compatible with Azure Container Instances
+- Deployable on AWS ECS and Google Cloud Run
+- Scalable container orchestration support
 
-# AWS ECS / Google Cloud Run
-# (Configure according to cloud provider documentation)
-```
-
-## 🔍 Troubleshooting
+## 🔧 Troubleshooting
 
 ### Common Issues
 
-**Model Loading Errors**:
-```bash
-# Verify model file exists
-ls -la weights/best.pt
+**Model Loading Problems**
+- Ensure `models/best.pt` file exists in the project directory
+- Verify model file permissions and format compatibility
+- Check available storage space for model loading
 
-# Check model format
-python -c "from ultralytics import YOLO; YOLO('weights/best.pt')"
-```
+**Camera Access Problems**
+- Verify camera permissions in browser and system settings
+- Try different camera sources if multiple cameras available
+- Ensure camera is not being used by other applications
 
-**Camera Access Issues**:
-```bash
-# Test camera access
-python -c "import cv2; cap = cv2.VideoCapture(0); print('Camera OK' if cap.isOpened() else 'Camera Error')"
-```
+**Web Interface Issues**
+- Confirm Flask server is running and accessible
+- Check that port 8080 is not blocked by firewall
+- Verify browser compatibility and JavaScript is enabled
 
-**Memory Issues**:
-```python
-# Reduce batch size in training
-# Modify model_trainer.py:
-model.train(data='data.yaml', batch=8)  # Reduce from 16 to 8
-```
+**Memory and Performance Issues**
+- Close unnecessary applications to free up system memory
+- Reduce image sizes for faster processing
+- Consider using GPU acceleration if available
 
-**Port Conflicts**:
-```python
-# Change port in starks/constant/application.py
-APP_PORT = 8081  # Use different port
-```
+**API Connection Problems**
+- Verify server address and port configuration
+- Check network connectivity and CORS settings
+- Validate JSON formatting for API requests
 
-## 📈 Performance Optimization
+## 📈 Performance Tips
 
-### GPU Acceleration
-```bash
-# Verify CUDA availability
-python -c "import torch; print(f'CUDA Available: {torch.cuda.is_available()}')"
+### Optimization Strategies
+- **Image Quality**: Use well-lit, high-contrast images for best detection results
+- **Processing Speed**: Resize large images before processing to improve speed
+- **Accuracy**: Adjust confidence thresholds based on your quality requirements
+- **System Resources**: Monitor CPU/GPU usage and memory consumption
 
-# Monitor GPU usage
-nvidia-smi --loop=1
-```
+### Best Practices
+- Maintain consistent lighting conditions during detection
+- Keep camera-to-object distance consistent for live detection
+- Use perpendicular viewing angles for optimal results
+- Ensure images are sharp and properly focused
 
-### Model Optimization
-```python
-# Use different YOLO variants for speed/accuracy tradeoff
-YOLO('yolo11n.pt')  # Fastest (nano)
-YOLO('yolo11s.pt')  # Balanced (small)
-YOLO('yolo11m.pt')  # Accurate (medium)
-YOLO('yolo11l.pt')  # Most accurate (large)
-```
+## 🤝 Contributing
 
-##Contributing
+### Development Guidelines
+- Follow Python PEP 8 coding standards
+- Add comprehensive documentation for new features
+- Include unit tests for new functionality
+- Update documentation when adding new capabilities
 
-### Development Setup
-```bash
-# Install development dependencies
-pip install -r requirements-dev.txt
+### Adding New Features
+- Fork the repository and create feature branches
+- Test thoroughly before submitting pull requests
+- Update relevant documentation files
+- Ensure backward compatibility when possible
 
-# Run tests
-python -m pytest tests/
+## 📚 Documentation
 
-# Code formatting
-black starks/ src/
-flake8 starks/ src/
-```
+For detailed information, refer to:
+- **API Documentation** (`docs/api.md`): Complete API reference and examples
+- **Development Guide** (`docs/development.md`): Setup, architecture, and development workflow  
+- **User Guide** (`docs/user_guide.md`): Comprehensive usage instructions and troubleshooting
 
-### Adding New Defect Types
-1. Update `data.yaml` with new classes
-2. Prepare training data in YOLO format
-3. Retrain model with expanded dataset
-4. Update web interface labels
+## 🔗 Dependencies
 
-##  License
+### Core Technologies
+- **Python 3.8+**: Programming language foundation
+- **YOLOv11 (Ultralytics)**: Object detection model architecture
+- **Flask**: Web framework for API and interface
+- **OpenCV**: Computer vision processing
+- **PyTorch**: Deep learning framework
+
+### Additional Libraries
+- **NumPy & SciPy**: Numerical computing
+- **Pillow**: Image processing utilities
+- **Flask-CORS**: Cross-origin request support
+- **gdown**: Google Drive file downloads
+- **PyYAML**: Configuration file processing
+
+## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-##  Acknowledgments
+## 🙏 Acknowledgments
 
-- **Ultralytics YOLO** for the core detection framework
-- **Flask** for the web application framework
+- **Ultralytics** for the YOLOv11 framework
+- **Flask** community for web framework
 - **OpenCV** for computer vision utilities
-- **PyTorch** for deep learning infrastructure
+- **PyTorch** team for deep learning infrastructure
 
-## 📧 Support
+## 📞 Support & Contact
 
-For technical support or questions:
-- **Issues**: [GitHub Issues](https://github.com/your-repo/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/your-repo/discussions)
-- **Email**: support@eaglescanai.com
+### Getting Help
+- **Documentation**: Check the comprehensive docs in the `docs/` folder
+- **GitHub Issues**: Report bugs and request features
+- **Community**: Engage with other users and developers
+
+### Project Information
+- **Repository**: [GitHub Repository](https://github.com/vany-gr34/starks_v)
+- **Version**: Check latest releases for updates and improvements
+- **Contributions**: Pull requests and contributions are welcome
 
 ---
 
-**Made with ❤️ for industrial quality control**
+**EagleScanAI - Enhancing Industrial Quality Control with AI** 🦅
