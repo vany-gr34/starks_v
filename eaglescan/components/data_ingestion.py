@@ -87,4 +87,4 @@ class DataIngestion:
 
     
     
-        k
+        

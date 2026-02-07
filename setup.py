@@ -1,6 +1,6 @@
 from setuptools import find_packages , setup 
 setup(
-    name="starks",
+    name="eaglescan",
     version="0.0.0",
     author="kaouthar hamdan ",
     author_email="kaoutarhamdan222@hmail.com",

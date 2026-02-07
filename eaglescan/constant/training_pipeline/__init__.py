@@ -7,7 +7,7 @@ DATA_INGESTION_DIR_NAME: str = "data_ingestion"
 
 DATA_INGESTION_FEATURE_STORE_DIR: str = "feature_store"
 
-DATA_DOWNLOAD_URL: str = "https://drive.google.com/file/d/1qa1mzbwQ0yJ9AlfWGMMjPSqJL0jcIJj6/view?usp=sharing"
+DATA_DOWNLOAD_URL: str = "https://drive.google.com/file/d/1GSkVXhCP4hS32xRE0MVBrq4mfO7hG6yx/view?usp=sharing"
 
 
 
@@ -27,9 +27,9 @@ DATA_VALIDATION_ALL_REQUIRED_FILES = ["train", "val", "data.yaml"]
 """
 MODEL TRAINER related constant start with MODEL_TRAINER var name
 """
-MODEL_TRAINER_DIR_NAME: str = "model_trainer"
+MODEL_TRAINER_DIR_NAME: str = "train"
 
-MODEL_TRAINER_PRETRAINED_WEIGHT_NAME: str = "yolov11.pt"
+MODEL_TRAINER_PRETRAINED_WEIGHT_NAME: str = "yolo11n.pt"
 
 MODEL_TRAINER_NO_EPOCHS: int = 1
 

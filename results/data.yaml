@@ -1,0 +1,10 @@
+names:
+- crazing
+- inclusion
+- patches
+- pitted_surface
+- rolled-in_scale
+- scratches
+nc: 6
+train: /kaggle/input/neu-dataset-prepared-for-yolo/neu_dataset_yolo_ready/train/images
+val: /kaggle/input/neu-dataset-prepared-for-yolo/neu_dataset_yolo_ready/val/images

@@ -5,12 +5,6 @@ from eaglescan.exception import AppException
 from eaglescan.entity.config_entity import DataValidationConfig
 from eaglescan.entity.artifacts_entity import (DataIngestionArtifact,
                                                  DataValidationArtifact)
-
-
-
-
-
-
 class DataValidation:
     def __init__(
         self,

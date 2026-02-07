@@ -9,7 +9,6 @@ from eaglescan.constant.application import APP_HOST, APP_PORT
 from ultralytics import YOLO
 import logging
 
-# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -40,7 +39,6 @@ class ClientApp:
 
 @app.route("/train")
 def trainRoute():
-    """Trigger training pipeline"""
     try:
         obj = TrainPipeline()
         obj.run_pipeline()
@@ -75,9 +73,9 @@ def predictRoute():
        
         results = clApp.model.predict(
             source=str(input_path),
-            conf=0.50,  # Confidence threshold
-            iou=0.7,    # IoU threshold for NMS
-            save=True,  # Save annotated image
+            conf=0.80,  
+            iou=0.7,   
+            save=True,  
             project='runs/detect',
             name='exp',
             exist_ok=True
@@ -90,7 +88,7 @@ def predictRoute():
                 detection = {
                     'class': r.names[int(box.cls)],
                     'confidence': float(box.conf),
-                    'bbox': box.xyxy[0].tolist()  # [x1, y1, x2, y2]
+                    'bbox': box.xyxy[0].tolist()  
                 }
                 detections.append(detection)
         
