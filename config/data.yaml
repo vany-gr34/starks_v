@@ -1,9 +1,0 @@
-# Paths (relative to data.yaml location)
-path: ../neu_dataset_yolo_ready  # Dataset root dir
-train: train/images  # Train images
-val: val/images      # Val images
-
-# Classes
-nc: 6  # Number of classes
-names: ['crazing', 'inclusion', 'patches', 
-        'pitted_surface', 'rolled-in_scale', 'scratches']
