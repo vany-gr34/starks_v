@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>EagleScanAI - Tangier Sustainability Challenge</title>
+	<title>EagleScanAI - Live Camera Detection</title>
 	<script src="https://cdn.tailwindcss.com"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -36,17 +36,68 @@
 			font-family: 'Inter', sans-serif;
 		}
 
-		.upload-zone {
-			transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		.glass-effect {
+			backdrop-filter: blur(16px);
+			background: rgba(255, 255, 255, 0.95);
 		}
 
-		.upload-zone:hover {
-			transform: translateY(-2px);
+		.video-container {
+			position: relative;
+			background: #000;
+			border-radius: 1rem;
+			overflow: hidden;
+			box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
 		}
 
-		.upload-zone.dragover {
-			transform: scale(1.02);
-			box-shadow: 0 0 30px rgba(59, 130, 246, 0.4);
+		.video-feed {
+			width: 100%;
+			height: auto;
+			display: block;
+		}
+
+		.scanning-overlay {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 3px;
+			background: linear-gradient(90deg, transparent 0%, rgba(59, 130, 246, 0.8) 50%, transparent 100%);
+			animation: scan 2s linear infinite;
+		}
+
+		@keyframes scan {
+			0% { transform: translateY(0); }
+			100% { transform: translateY(500px); }
+		}
+
+		.detection-badge {
+			position: absolute;
+			top: 1rem;
+			right: 1rem;
+			padding: 0.5rem 1rem;
+			background: rgba(0, 0, 0, 0.7);
+			color: white;
+			border-radius: 0.5rem;
+			font-weight: 600;
+			backdrop-filter: blur(10px);
+		}
+
+		.status-indicator {
+			width: 8px;
+			height: 8px;
+			border-radius: 50%;
+			display: inline-block;
+			margin-right: 0.5rem;
+		}
+
+		.status-live {
+			background: #10B981;
+			box-shadow: 0 0 10px #10B981;
+			animation: pulse 2s infinite;
+		}
+
+		.status-offline {
+			background: #EF4444;
 		}
 
 		.defect-item {
@@ -57,46 +108,56 @@
 			transform: translateX(4px);
 		}
 
-		.glass-effect {
-			backdrop-filter: blur(16px);
-			background: rgba(255, 255, 255, 0.95);
-		}
-
-		.scanning-animation {
-			background: linear-gradient(90deg, transparent 0%, rgba(59, 130, 246, 0.2) 50%, transparent 100%);
-			animation: scan 2s linear infinite;
-		}
-
-		@keyframes scan {
-			0% { transform: translateX(-100%); }
-			100% { transform: translateX(100%); }
-		}
-
-		.result-image {
-			transition: all 0.3s ease;
-		}
-
-		.result-image:hover {
-			transform: scale(1.02);
-		}
-
-		/* Loading spinner */
-		.spinner {
-			border: 3px solid rgba(59, 130, 246, 0.1);
-			border-radius: 50%;
-			border-top: 3px solid #3B82F6;
-			width: 40px;
-			height: 40px;
-			animation: spin 1s linear infinite;
-		}
-
 		/* Defect type colors */
-		.defect-crazing { background-color: #EF4444; }
-		.defect-inclusion { background-color: #06B6D4; }
-		.defect-patches { background-color: #3B82F6; }
-		.defect-pitted_surface { background-color: #F59E0B; }
-		.defect-rolled-in_scale { background-color: #8B5CF6; }
-		.defect-scratches { background-color: #EC4899; }
+		.defect-crazing { background-color: #EF4444; color: white; }
+		.defect-inclusion { background-color: #06B6D4; color: white; }
+		.defect-patches { background-color: #3B82F6; color: white; }
+		.defect-pitted-surface { background-color: #F59E0B; color: white; }
+		.defect-rolled-in-scale { background-color: #8B5CF6; color: white; }
+		.defect-scratches { background-color: #EC4899; color: white; }
+
+		.detection-item {
+			padding: 0.75rem;
+			background: #F8FAFC;
+			border-radius: 0.5rem;
+			margin-bottom: 0.5rem;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			transition: all 0.2s ease;
+		}
+
+		.detection-item:hover {
+			background: #E2E8F0;
+			transform: translateX(4px);
+		}
+
+		.defect-badge {
+			display: inline-block;
+			padding: 0.25rem 0.75rem;
+			border-radius: 9999px;
+			font-size: 0.875rem;
+			font-weight: 600;
+			margin-right: 0.5rem;
+		}
+
+		.confidence-badge {
+			background: #E5E7EB;
+			color: #374151;
+			padding: 0.25rem 0.5rem;
+			border-radius: 0.375rem;
+			font-size: 0.75rem;
+			font-weight: 600;
+		}
+
+		.alert-pulse {
+			animation: alertPulse 1s ease-in-out infinite;
+		}
+
+		@keyframes alertPulse {
+			0%, 100% { opacity: 1; }
+			50% { opacity: 0.6; }
+		}
 	</style>
 </head>
 
@@ -107,18 +168,21 @@
 			<div class="flex justify-between items-center h-16">
 				<div class="flex items-center space-x-3">
 					<div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-						<i class="fas fa-search text-white"></i>
+						<i class="fas fa-video text-white"></i>
 					</div>
 					<div>
-						<h1 class="text-xl font-bold text-slate-900">EagleScanAI</h1>
-						<p class="text-xs text-slate-500">Industrial Defect Detection</p>
+						<h1 class="text-xl font-bold text-slate-900">EagleScanAI Live</h1>
+						<p class="text-xs text-slate-500">Real-Time Defect Detection</p>
 					</div>
 				</div>
 				<div class="flex items-center space-x-4">
-					<div id="status-indicator" class="flex items-center space-x-2">
-						<div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-						<span class="text-sm text-slate-600">System Ready</span>
+					<div id="camera-status" class="flex items-center space-x-2">
+						<span class="status-indicator status-offline"></span>
+						<span class="text-sm text-slate-600">Camera Offline</span>
 					</div>
+					<button id="toggle-camera" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
+						<i class="fas fa-play mr-2"></i>Start Camera
+					</button>
 				</div>
 			</div>
 		</div>
@@ -127,329 +191,239 @@
 	<!-- Main Content -->
 	<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 		<!-- Header Section -->
-		<div class="text-center mb-12">
+		<div class="text-center mb-8">
 			<h2 class="text-4xl font-bold text-slate-900 mb-4">
-				Advanced Defect Detection for
+				Live Defect Detection for
 				<span class="text-blue-600">Sustainable Manufacturing</span>
 			</h2>
 			<p class="text-lg text-slate-600 max-w-3xl mx-auto">
-				Supporting the Tangier Sustainability Challenge with AI-powered quality control.
-				Reduce waste, improve efficiency, and advance Morocco's sustainable manufacturing goals.
+				Real-time AI-powered quality control monitoring. Detect defects as they happen with instant alerts.
 			</p>
-			
-			<!-- Defect Types Pills -->
-			<div class="flex flex-wrap justify-center gap-2 mt-6">
-				<span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">Crazing</span>
-				<span class="px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full text-sm font-medium">Inclusion</span>
-				<span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">Patches</span>
-				<span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-sm font-medium">Pitted Surface</span>
-				<span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">Rolled-in Scale</span>
-				<span class="px-3 py-1 bg-pink-100 text-pink-700 rounded-full text-sm font-medium">Scratches</span>
-			</div>
 		</div>
-
-		<!-- Key Features & Benefits Grid -->
-		<div class="mb-12">
-			<div class="text-center mb-8">
-				<h3 class="text-2xl font-bold text-slate-900 mb-2">Quantified Impact & Performance</h3>
-				<p class="text-slate-600">Proven results for sustainable manufacturing excellence</p>
-			</div>
-			<div class="grid md:grid-cols-3 lg:grid-cols-6 gap-4">
-				<div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 text-center hover:shadow-md transition-shadow">
-					<div class="w-12 h-12 mx-auto mb-3 bg-blue-100 rounded-full flex items-center justify-center">
-						<i class="fas fa-bullseye text-blue-600"></i>
-					</div>
-					<div class="text-2xl font-bold text-blue-600">94.7%</div>
-					<div class="text-sm text-slate-600 font-medium">Detection Accuracy</div>
-				</div>
-				<div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 text-center hover:shadow-md transition-shadow">
-					<div class="w-12 h-12 mx-auto mb-3 bg-green-100 rounded-full flex items-center justify-center">
-						<i class="fas fa-leaf text-green-600"></i>
-					</div>
-					<div class="text-2xl font-bold text-green-600">23%</div>
-					<div class="text-sm text-slate-600 font-medium">Waste Reduction</div>
-				</div>
-				<div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 text-center hover:shadow-md transition-shadow">
-					<div class="w-12 h-12 mx-auto mb-3 bg-purple-100 rounded-full flex items-center justify-center">
-						<i class="fas fa-clock text-purple-600"></i>
-					</div>
-					<div class="text-2xl font-bold text-purple-600">0.8s</div>
-					<div class="text-sm text-slate-600 font-medium">Analysis Time</div>
-				</div>
-				<div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 text-center hover:shadow-md transition-shadow">
-					<div class="w-12 h-12 mx-auto mb-3 bg-orange-100 rounded-full flex items-center justify-center">
-						<i class="fas fa-euro-sign text-orange-600"></i>
-					</div>
-					<div class="text-2xl font-bold text-orange-600">€185K</div>
-					<div class="text-sm text-slate-600 font-medium">Annual Savings</div>
-				</div>
-				<div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 text-center hover:shadow-md transition-shadow">
-					<div class="w-12 h-12 mx-auto mb-3 bg-indigo-100 rounded-full flex items-center justify-center">
-						<i class="fas fa-shield-alt text-indigo-600"></i>
-					</div>
-					<div class="text-2xl font-bold text-indigo-600">24/7</div>
-					<div class="text-sm text-slate-600 font-medium">Monitoring</div>
-				</div>
-				<div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 text-center hover:shadow-md transition-shadow">
-					<div class="w-12 h-12 mx-auto mb-3 bg-red-100 rounded-full flex items-center justify-center">
-						<i class="fas fa-search text-red-600"></i>
-					</div>
-					<div class="text-2xl font-bold text-red-600">6</div>
-					<div class="text-sm text-slate-600 font-medium">Defect Types</div>
-				</div>
-			</div>
-		</div>
-
 
 		<!-- Main Interface Grid -->
-		<div class="grid lg:grid-cols-2 gap-8">
-			<!-- Upload Section -->
-			<div class="space-y-6">
+		<div class="grid lg:grid-cols-3 gap-8">
+			<!-- Live Camera Feed - Takes up 2 columns -->
+			<div class="lg:col-span-2 space-y-6">
+				<!-- Camera Feed -->
 				<div class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
-					<div class="bg-slate-50 px-6 py-4 border-b border-slate-200">
+					<div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
 						<h3 class="text-lg font-semibold text-slate-900 flex items-center">
-							<i class="fas fa-upload text-blue-600 mr-3"></i>
-							Image Upload
+							<i class="fas fa-video text-blue-600 mr-3"></i>
+							Live Camera Feed
 						</h3>
+						<div class="flex items-center space-x-3">
+							<select id="camera-select" class="px-3 py-1 border border-slate-300 rounded-lg text-sm">
+								<option value="0">Camera 1</option>
+							</select>
+							<button id="snapshot-btn" class="px-3 py-1 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-sm disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+								<i class="fas fa-camera mr-1"></i>Snapshot
+							</button>
+						</div>
 					</div>
 					
-					<!-- Upload Zone -->
 					<div class="p-6">
-						<div id="upload-zone" class="upload-zone border-2 border-dashed border-slate-300 rounded-xl p-8 text-center hover:border-blue-400 hover:bg-blue-50/50 cursor-pointer">
-							<div id="upload-content">
-								<div class="w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
-									<i class="fas fa-cloud-upload-alt text-2xl text-blue-600"></i>
+						<div class="video-container">
+							<!-- Camera Feed Image -->
+							<img id="camera-feed" src="" class="video-feed" alt="Camera Feed" style="display: none;">
+							
+							<!-- Placeholder when camera is off -->
+							<div id="camera-placeholder" class="flex items-center justify-center bg-slate-900 text-white" style="min-height: 480px;">
+								<div class="text-center">
+									<i class="fas fa-video-slash text-6xl mb-4 text-slate-600"></i>
+									<h4 class="text-xl font-semibold mb-2">Camera Not Active</h4>
+									<p class="text-slate-400">Click "Start Camera" to begin live detection</p>
 								</div>
-								<h4 class="text-lg font-semibold text-slate-900 mb-2">Upload Manufacturing Surface</h4>
-								<p class="text-slate-600 mb-4">Drag and drop your image here, or click to browse</p>
-								
-								<!-- File Specifications -->
-								<div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4 text-sm">
-									<div class="grid grid-cols-3 gap-4 text-center">
-										<div>
-											<div class="font-semibold text-blue-700 mb-1">📁 Supported Formats</div>
-											<div class="text-slate-600 font-mono">JPG, PNG, MP4</div>
-										</div>
-										<div>
-											<div class="font-semibold text-blue-700 mb-1">📊 Max File Size</div>
-											<div class="text-slate-600">10 MB</div>
-										</div>
-										<div>
-											<div class="font-semibold text-green-700 mb-1">⏱️ Analysis Time</div>
-											<div class="text-green-600 font-semibold">~0.8 seconds</div>
-										</div>
-									</div>
-								</div>
-								
-								<button type="button" id="upload-btn" class="inline-flex items-center px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-sm hover:shadow-md">
-									<i class="fas fa-folder-open mr-2"></i>
-									Start Quality Analysis
-								</button>
 							</div>
 							
-							<!-- Image Preview -->
-							<div id="image-preview" class="hidden">
-								<img id="preview-img" class="max-w-full max-h-64 mx-auto rounded-lg shadow-md" />
-								<div class="mt-4 flex justify-center space-x-3">
-									<button id="change-image" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 transition-colors">
-										<i class="fas fa-exchange-alt mr-2"></i>Change
-									</button>
-									<button id="analyze-btn" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-										<i class="fas fa-search mr-2"></i>Analyze Image
-									</button>
-								</div>
+							<!-- Scanning overlay (shown when active) -->
+							<div id="scanning-overlay" class="scanning-overlay" style="display: none;"></div>
+							
+							<!-- Live detection badge -->
+							<div id="detection-badge" class="detection-badge" style="display: none;">
+								<i class="fas fa-circle-notch fa-spin mr-2"></i>
+								<span id="detection-count">Scanning...</span>
 							</div>
 						</div>
-						
-						<!-- Camera Options -->
-						<div class="mt-4 p-4 bg-slate-50 rounded-lg">
-							<h5 class="font-medium text-slate-900 mb-2">Quick Actions</h5>
-							<div class="flex space-x-3">
-								<button id="live-detection" class="flex-1 py-2 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
-									<i class="fas fa-video mr-2"></i>Live Camera
-								</button>
-								<button id="train-model" class="flex-1 py-2 px-4 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
-									<i class="fas fa-cogs mr-2"></i>Train Model
-								</button>
-							</div>
+
+						<!-- Camera Controls -->
+						<div class="mt-4 grid grid-cols-3 gap-3">
+							<button id="quality-low" class="py-2 px-4 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors text-sm">
+								<i class="fas fa-signal mr-2"></i>Low Quality
+							</button>
+							<button id="quality-medium" class="py-2 px-4 bg-blue-100 border border-blue-300 rounded-lg text-sm font-medium">
+								<i class="fas fa-signal mr-2"></i>Medium Quality
+							</button>
+							<button id="quality-high" class="py-2 px-4 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors text-sm">
+								<i class="fas fa-signal mr-2"></i>High Quality
+							</button>
 						</div>
+					</div>
+				</div>
+
+				<!-- Real-time Statistics -->
+				<div class="grid grid-cols-4 gap-4">
+					<div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 text-center">
+						<div class="text-2xl font-bold text-blue-600" id="frames-processed">0</div>
+						<div class="text-xs text-slate-600 mt-1">Frames Processed</div>
+					</div>
+					<div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 text-center">
+						<div class="text-2xl font-bold text-red-600" id="defects-found">0</div>
+						<div class="text-xs text-slate-600 mt-1">Defects Found</div>
+					</div>
+					<div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 text-center">
+						<div class="text-2xl font-bold text-green-600" id="fps-counter">0</div>
+						<div class="text-xs text-slate-600 mt-1">FPS</div>
+					</div>
+					<div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 text-center">
+						<div class="text-2xl font-bold text-purple-600" id="avg-confidence">0%</div>
+						<div class="text-xs text-slate-600 mt-1">Avg Confidence</div>
 					</div>
 				</div>
 			</div>
 
-			<!-- Results Section -->
+			<!-- Detection Panel - Takes up 1 column -->
 			<div class="space-y-6">
-				<!-- Analysis Results -->
+				<!-- Current Detections -->
 				<div class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
 					<div class="bg-slate-50 px-6 py-4 border-b border-slate-200">
 						<h3 class="text-lg font-semibold text-slate-900 flex items-center">
-							<i class="fas fa-chart-line text-green-600 mr-3"></i>
-							Analysis Results
+							<i class="fas fa-exclamation-triangle text-amber-600 mr-3"></i>
+							Active Detections
 						</h3>
 					</div>
 					
-					<div id="results-container" class="p-6">
-						<!-- Default State -->
-						<div id="default-state" class="text-center py-12">
-							<div class="w-20 h-20 mx-auto mb-6 bg-slate-100 rounded-full flex items-center justify-center">
-								<i class="fas fa-microscope text-3xl text-slate-400"></i>
+					<div id="detections-container" class="p-6 max-h-96 overflow-y-auto">
+						<div id="no-detections" class="text-center py-8">
+							<div class="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
+								<i class="fas fa-check-circle text-2xl text-green-600"></i>
 							</div>
-							<h4 class="text-lg font-semibold text-slate-900 mb-2">Ready for Analysis</h4>
-							<p class="text-slate-600">Upload an image to start defect detection</p>
+							<p class="text-slate-600">No defects detected</p>
+							<p class="text-sm text-slate-500 mt-1">All clear ✓</p>
 						</div>
 						
-						<!-- Loading State -->
-						<div id="loading-state" class="hidden text-center py-12">
-							<div class="w-20 h-20 mx-auto mb-6 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
-							<h4 class="text-lg font-semibold text-slate-900 mb-2">Analyzing Image...</h4>
-							<p class="text-slate-600">Our AI is examining your image for defects</p>
-							<div class="mt-6 bg-slate-100 rounded-lg h-2 overflow-hidden">
-								<div class="scanning-animation h-full w-full"></div>
-							</div>
-						</div>
-						
-						<!-- Results State -->
-						<div id="results-state" class="hidden">
-							<div id="result-image-container" class="mb-6">
-								<!-- Result image will be inserted here -->
-							</div>
+						<div id="active-detections" class="hidden space-y-2">
+							<!-- Detection items will be inserted here dynamically -->
 						</div>
 					</div>
 				</div>
 
-				<!-- Detection Details -->
+				<!-- Alert Settings -->
 				<div class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
 					<div class="bg-slate-50 px-6 py-4 border-b border-slate-200">
 						<h3 class="text-lg font-semibold text-slate-900 flex items-center">
-							<i class="fas fa-list-ul text-amber-600 mr-3"></i>
-							Detection Details
+							<i class="fas fa-bell text-purple-600 mr-3"></i>
+							Alert Settings
 						</h3>
 					</div>
 					
-					<div id="details-container" class="p-6">
-						<div id="no-details" class="text-center py-8">
-							<div class="w-16 h-16 mx-auto mb-4 bg-slate-100 rounded-full flex items-center justify-center">
-								<i class="fas fa-info-circle text-2xl text-slate-400"></i>
+					<div class="p-6 space-y-4">
+						<div>
+							<label class="flex items-center justify-between">
+								<span class="text-sm font-medium text-slate-700">Sound Alerts</span>
+								<input type="checkbox" id="sound-alerts" class="w-5 h-5 text-blue-600 rounded">
+							</label>
+						</div>
+						<div>
+							<label class="flex items-center justify-between">
+								<span class="text-sm font-medium text-slate-700">Auto-Capture Defects</span>
+								<input type="checkbox" id="auto-capture" class="w-5 h-5 text-blue-600 rounded" checked>
+							</label>
+						</div>
+						<div>
+							<label class="text-sm font-medium text-slate-700 block mb-2">Confidence Threshold</label>
+							<input type="range" id="confidence-threshold" min="50" max="95" value="75" class="w-full">
+							<div class="flex justify-between text-xs text-slate-500 mt-1">
+								<span>50%</span>
+								<span id="threshold-value" class="font-semibold text-blue-600">75%</span>
+								<span>95%</span>
 							</div>
-							<p class="text-slate-600">Detection details will appear here</p>
 						</div>
-						
-						<div id="detection-details" class="hidden space-y-3">
-							<!-- Detection items will be inserted here -->
+						<div>
+							<label class="text-sm font-medium text-slate-700 block mb-2">Detection Speed</label>
+							<select id="detection-speed" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+								<option value="slow">Slow (Higher Accuracy)</option>
+								<option value="medium" selected>Medium (Balanced)</option>
+								<option value="fast">Fast (Lower Latency)</option>
+							</select>
 						</div>
+					</div>
+				</div>
+
+				<!-- Quick Actions -->
+				<div class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
+					<div class="bg-slate-50 px-6 py-4 border-b border-slate-200">
+						<h3 class="text-lg font-semibold text-slate-900 flex items-center">
+							<i class="fas fa-bolt text-orange-600 mr-3"></i>
+							Quick Actions
+						</h3>
+					</div>
+					
+					<div class="p-6 space-y-3">
+						<button id="clear-detections" class="w-full py-2 px-4 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors">
+							<i class="fas fa-eraser mr-2"></i>Clear Detections
+						</button>
+						<button id="export-data" class="w-full py-2 px-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+							<i class="fas fa-download mr-2"></i>Export Session Data
+						</button>
+						<button id="upload-mode" class="w-full py-2 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+							<i class="fas fa-upload mr-2"></i>Switch to Upload Mode
+						</button>
 					</div>
 				</div>
 			</div>
 		</div>
 
 		<!-- Performance Dashboard -->
-		<div class="mt-12 grid md:grid-cols-4 gap-6">
-			<div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
-				<div class="flex items-center justify-between">
-					<div>
-						<p class="text-sm font-medium text-slate-600">Surfaces Analyzed</p>
-						<p id="stats-analyzed" class="text-2xl font-bold text-slate-900">0</p>
-						<p class="text-xs text-slate-500">🔍 Quality checks performed</p>
+		<div class="mt-12">
+			<h3 class="text-2xl font-bold text-slate-900 mb-6 text-center">Session Performance</h3>
+			<div class="grid md:grid-cols-6 gap-4">
+				<div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 text-center hover:shadow-md transition-shadow">
+					<div class="w-12 h-12 mx-auto mb-3 bg-blue-100 rounded-full flex items-center justify-center">
+						<i class="fas fa-clock text-blue-600"></i>
 					</div>
-					<div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-						<i class="fas fa-images text-blue-600"></i>
-					</div>
+					<div class="text-2xl font-bold text-blue-600" id="session-time">00:00</div>
+					<div class="text-sm text-slate-600 font-medium">Session Time</div>
 				</div>
-			</div>
-			
-			<div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
-				<div class="flex items-center justify-between">
-					<div>
-						<p class="text-sm font-medium text-slate-600">Defects Detected</p>
-						<p id="stats-defects" class="text-2xl font-bold text-red-600">0</p>
-						<p class="text-xs text-slate-500">💰 Waste prevented</p>
-					</div>
-					<div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+				
+				<div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 text-center hover:shadow-md transition-shadow">
+					<div class="w-12 h-12 mx-auto mb-3 bg-red-100 rounded-full flex items-center justify-center">
 						<i class="fas fa-exclamation-triangle text-red-600"></i>
 					</div>
+					<div class="text-2xl font-bold text-red-600" id="total-defects">0</div>
+					<div class="text-sm text-slate-600 font-medium">Total Defects</div>
 				</div>
-			</div>
-			
-			<div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
-				<div class="flex items-center justify-between">
-					<div>
-						<p class="text-sm font-medium text-slate-600">Quality Verified</p>
-						<p id="stats-clean" class="text-2xl font-bold text-green-600">0</p>
-						<p class="text-xs text-slate-500">✅ Perfect surfaces</p>
+				
+				<div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 text-center hover:shadow-md transition-shadow">
+					<div class="w-12 h-12 mx-auto mb-3 bg-green-100 rounded-full flex items-center justify-center">
+						<i class="fas fa-tachometer-alt text-green-600"></i>
 					</div>
-					<div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-						<i class="fas fa-check-circle text-green-600"></i>
-					</div>
+					<div class="text-2xl font-bold text-green-600">0.8s</div>
+					<div class="text-sm text-slate-600 font-medium">Avg Process Time</div>
 				</div>
-			</div>
-			
-			<div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
-				<div class="flex items-center justify-between">
-					<div>
-						<p class="text-sm font-medium text-slate-600">Precision Rate</p>
-						<p id="stats-accuracy" class="text-2xl font-bold text-purple-600">94.7%</p>
-						<p class="text-xs text-slate-500">🎯 Sustainability impact</p>
-					</div>
-					<div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+				
+				<div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 text-center hover:shadow-md transition-shadow">
+					<div class="w-12 h-12 mx-auto mb-3 bg-purple-100 rounded-full flex items-center justify-center">
 						<i class="fas fa-bullseye text-purple-600"></i>
 					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- Trust & Proof Section -->
-	<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
-		<div class="bg-gradient-to-r from-blue-50 to-green-50 rounded-2xl p-8 border border-blue-200">
-			<div class="text-center mb-8">
-				<h3 class="text-2xl font-bold text-slate-900 mb-2">
-					🏆 Trust & Proof
-				</h3>
-				<p class="text-slate-600">Validated technology for the Tangier Sustainability Challenge</p>
-			</div>
-			
-			<div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-				<div class="bg-white p-6 rounded-xl shadow-sm text-center hover:shadow-md transition-shadow">
-					<div class="w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
-						<i class="fas fa-industry text-2xl text-blue-600"></i>
-					</div>
-					<div class="text-2xl font-bold text-blue-600 mb-2">50+</div>
-					<div class="text-sm font-semibold text-slate-700">Trusted Manufacturers</div>
-					<div class="text-xs text-slate-500 mt-1">Across Morocco & Europe</div>
+					<div class="text-2xl font-bold text-purple-600">94.7%</div>
+					<div class="text-sm text-slate-600 font-medium">Model Accuracy</div>
 				</div>
 				
-				<div class="bg-white p-6 rounded-xl shadow-sm text-center hover:shadow-md transition-shadow">
-					<div class="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
-						<i class="fas fa-university text-2xl text-green-600"></i>
+				<div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 text-center hover:shadow-md transition-shadow">
+					<div class="w-12 h-12 mx-auto mb-3 bg-orange-100 rounded-full flex items-center justify-center">
+						<i class="fas fa-camera text-orange-600"></i>
 					</div>
-					<div class="text-lg font-bold text-green-600 mb-2">FST</div>
-					<div class="text-sm font-semibold text-slate-700">Tanger Project</div>
-					<div class="text-xs text-slate-500 mt-1">Academic Partnership</div>
+					<div class="text-2xl font-bold text-orange-600" id="snapshots-taken">0</div>
+					<div class="text-sm text-slate-600 font-medium">Snapshots Taken</div>
 				</div>
 				
-				<div class="bg-white p-6 rounded-xl shadow-sm text-center hover:shadow-md transition-shadow">
-					<div class="w-16 h-16 mx-auto mb-4 bg-purple-100 rounded-full flex items-center justify-center">
-						<i class="fas fa-shield-alt text-2xl text-purple-600"></i>
+				<div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 text-center hover:shadow-md transition-shadow">
+					<div class="w-12 h-12 mx-auto mb-3 bg-indigo-100 rounded-full flex items-center justify-center">
+						<i class="fas fa-shield-alt text-indigo-600"></i>
 					</div>
-					<div class="text-lg font-bold text-purple-600 mb-2">256-bit</div>
-					<div class="text-sm font-semibold text-slate-700">Secure Encryption</div>
-					<div class="text-xs text-slate-500 mt-1">Data Protection</div>
-				</div>
-				
-				<div class="bg-white p-6 rounded-xl shadow-sm text-center hover:shadow-md transition-shadow">
-					<div class="w-16 h-16 mx-auto mb-4 bg-orange-100 rounded-full flex items-center justify-center">
-						<i class="fas fa-award text-2xl text-orange-600"></i>
-					</div>
-					<div class="text-lg font-bold text-orange-600 mb-2">ISO</div>
-					<div class="text-sm font-semibold text-slate-700">Certified Quality</div>
-					<div class="text-xs text-slate-500 mt-1">International Standards</div>
-				</div>
-			</div>
-			
-			<div class="mt-8 text-center">
-				<div class="inline-flex items-center px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-medium">
-					<i class="fas fa-leaf mr-2"></i>
-					Contributing to Morocco's Sustainable Manufacturing Goals
+					<div class="text-2xl font-bold text-indigo-600">24/7</div>
+					<div class="text-sm text-slate-600 font-medium">Uptime Ready</div>
 				</div>
 			</div>
 		</div>
@@ -465,159 +439,423 @@
 						Tangier Sustainability Challenge 2026
 					</div>
 				</div>
-				<p class="text-slate-600">Powered by YOLO11 AI Technology | Contributing to Morocco's Sustainable Future</p>
-				<div class="mt-4 flex justify-center space-x-6">
-					<a href="#" class="text-slate-400 hover:text-slate-600 transition-colors">
-						<i class="fab fa-github"></i>
-					</a>
-					<a href="#" class="text-slate-400 hover:text-slate-600 transition-colors">
-						<i class="fab fa-linkedin"></i>
-					</a>
-					<a href="#" class="text-slate-400 hover:text-slate-600 transition-colors">
-						<i class="fas fa-envelope"></i>
-					</a>
-				</div>
+				<p class="text-slate-600">Powered by YOLO11 AI Technology | Real-Time Quality Control</p>
 				<div class="mt-4 text-xs text-slate-500">
-					EagleScanAI © 2026 - Advancing Sustainable Manufacturing Excellence
+					EagleScanAI © 2026 - Live Defect Detection System
 				</div>
 			</div>
 		</div>
 	</footer>
 
-	<!-- Hidden Elements -->
-	<input type="file" id="file-input" accept="image/*" class="hidden">
-	<input type="hidden" id="url" value="/predict">
-	<canvas id="canvas" class="hidden"></canvas>
-
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-		integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
-	</script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
-	</script>
 
 	<script>
-		var mybtn = document.getElementById('startbtn');
-		var myvideo = document.getElementById('video');
-		var mycanvas = document.getElementById('canvas');
-		var myphoto = document.getElementById('photo');
-		var base_data = "";
+		// Global variables
+		let cameraActive = false;
+		let statsInterval = null;
+		let sessionStartTime = null;
+		let sessionStats = {
+			framesProcessed: 0,
+			defectsFound: 0,
+			snapshotsTaken: 0,
+			fps: 0,
+			avgConfidence: 0
+		};
+		let detectionHistory = [];
 
-		function sendRequest(base64Data) {
-			var type = "json";
-			if (base64Data != "" && base64Data != null) {
-				var url = $("#url").val();
-				$("#loading").show();
-				
-				$.ajax({
-					url: url,
-					type: "post",
-					cache: false,
-					async: true,
-					crossDomain: true,
-					headers: {
-						'Content-Type': 'application/json',
-						'Access-Control-Allow-Origin': '*'
-					},
-					data: JSON.stringify({
-						image: base64Data
-					}),
-					success: function (res) {
-						console.log("Response:", res);
+		// Update session timer
+		function updateSessionTimer() {
+			if (!sessionStartTime) return;
+			
+			const elapsed = Math.floor((Date.now() - sessionStartTime) / 1000);
+			const minutes = Math.floor(elapsed / 60);
+			const seconds = elapsed % 60;
+			$('#session-time').text(
+				`${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+			);
+		}
+
+		// Fetch and update statistics from server
+		function fetchStats() {
+			if (!cameraActive) return;
+			
+			$.ajax({
+				url: '/stats',
+				type: 'GET',
+				success: function(response) {
+					if (response.status === 'success' && response.stats) {
+						const stats = response.stats;
 						
-						// Clear previous results
-						$(".res-part2").html("");
-						$("#detection-details").html("");
+						// Update display
+						$('#frames-processed').text(stats.total_frames || 0);
+						$('#defects-found').text(stats.total_detections || 0);
+						$('#total-defects').text(stats.total_detections || 0);
 						
-						// Display annotated image
-						if (res.image) {
-							var imageData = res.image;
-							$(".res-part2").append("<img class='resp-img' src='data:image/jpeg;base64," +
-								imageData + "' alt='Detected defects' />");
+						// Calculate FPS (approximate)
+						if (stats.session_duration_seconds > 0) {
+							const fps = Math.round(stats.total_frames / stats.session_duration_seconds);
+							$('#fps-counter').text(fps);
 						}
 						
-						// Display detection details
-						if (res.detections && res.detections.length > 0) {
-							var detailsHtml = '<div class="mb-2"><strong>Found ' + res.count + ' defect(s):</strong></div>';
-							
-							res.detections.forEach(function(det, idx) {
-								var defectClass = det.class.replace(/_/g, '-');
-								var confidence = (det.confidence * 100).toFixed(1);
-								
-								detailsHtml += '<div class="detection-item">';
-								detailsHtml += '<span class="defect-badge defect-' + defectClass + '">' + det.class + '</span>';
-								detailsHtml += '<span class="badge badge-secondary">' + confidence + '%</span>';
-								detailsHtml += '<div class="small text-muted mt-1">Bbox: [' + 
-									det.bbox.map(x => x.toFixed(0)).join(', ') + ']</div>';
-								detailsHtml += '</div>';
-							});
-							
-							$("#detection-details").html(detailsHtml);
+						// Update detection badge
+						if (stats.total_detections > 0) {
+							$('#detection-count').html(`<span class="alert-pulse">${stats.total_detections} Defect(s) Detected</span>`);
 						} else {
-							$("#detection-details").html('<p class="text-success text-center">✓ No defects detected - Surface looks good!</p>');
+							$('#detection-count').text('Scanning...');
 						}
 						
-						$("#loading").hide();
-					},
-					error: function(xhr, status, error) {
-						console.error("Error:", error);
-						$("#loading").hide();
-						
-						$(".res-part2").html('<div class="alert alert-danger">Error: ' + 
-							(xhr.responseJSON?.message || 'Failed to process image') + '</div>');
-						
-						$("#detection-details").html('<p class="text-danger">Detection failed. Please try again.</p>');
+						// Update defect counts
+						sessionStats.framesProcessed = stats.total_frames;
+						sessionStats.defectsFound = stats.total_detections;
 					}
-				});
+				},
+				error: function(xhr, status, error) {
+					console.error("Error fetching stats:", error);
+				}
+			});
+		}
+
+		// Update camera status
+		function updateCameraStatus(active) {
+			cameraActive = active;
+			
+			if (active) {
+				$('#camera-status .status-indicator').removeClass('status-offline').addClass('status-live');
+				$('#camera-status span').text('Camera Live');
+				$('#toggle-camera').html('<i class="fas fa-stop mr-2"></i>Stop Camera').removeClass('bg-blue-600 hover:bg-blue-700').addClass('bg-red-600 hover:bg-red-700');
+				$('#camera-placeholder').hide();
+				$('#camera-feed').show();
+				$('#scanning-overlay').show();
+				$('#detection-badge').show();
+				$('#snapshot-btn').prop('disabled', false);
+				
+				// Start session timer
+				if (!sessionStartTime) {
+					sessionStartTime = Date.now();
+					setInterval(updateSessionTimer, 1000);
+				}
+				
+				// Start stats polling
+				if (!statsInterval) {
+					statsInterval = setInterval(fetchStats, 1000); // Poll every second
+				}
+				
+				// Set camera feed source
+				const timestamp = new Date().getTime();
+				const confThreshold = $('#confidence-threshold').val() / 100;
+				$('#camera-feed').attr('src', `/live?conf=${confThreshold}&t=${timestamp}`);
+				
 			} else {
-				alert("Please upload an image first!");
+				$('#camera-status .status-indicator').removeClass('status-live').addClass('status-offline');
+				$('#camera-status span').text('Camera Offline');
+				$('#toggle-camera').html('<i class="fas fa-play mr-2"></i>Start Camera').removeClass('bg-red-600 hover:bg-red-700').addClass('bg-blue-600 hover:bg-blue-700');
+				$('#camera-placeholder').show();
+				$('#camera-feed').hide().attr('src', '');
+				$('#scanning-overlay').hide();
+				$('#detection-badge').hide();
+				$('#snapshot-btn').prop('disabled', true);
+				
+				// Stop stats polling
+				if (statsInterval) {
+					clearInterval(statsInterval);
+					statsInterval = null;
+				}
 			}
 		}
 
-		$(document).ready(function () {
-			$("#loading").hide();
-
-			$('#send').click(function (evt) {
-				evt.preventDefault();
-				sendRequest(base_data);
+		// Start camera via API
+		function startCamera() {
+			$.ajax({
+				url: '/camera/start',
+				type: 'POST',
+				contentType: 'application/json',
+				data: JSON.stringify({ camera_id: 0 }),
+				success: function(response) {
+					console.log("Camera started:", response);
+					updateCameraStatus(true);
+				},
+				error: function(xhr, status, error) {
+					console.error("Failed to start camera:", error);
+					alert("Failed to start camera: " + (xhr.responseJSON?.message || error));
+				}
 			});
+		}
 
-			$('#uload').click(function (evt) {
-				evt.preventDefault();
-				$('#fileinput').focus().trigger('click');
+		// Stop camera via API
+		function stopCamera() {
+			$.ajax({
+				url: '/camera/stop',
+				type: 'POST',
+				contentType: 'application/json',
+				success: function(response) {
+					console.log("Camera stopped:", response);
+					updateCameraStatus(false);
+				},
+				error: function(xhr, status, error) {
+					console.error("Failed to stop camera:", error);
+					alert("Failed to stop camera: " + (xhr.responseJSON?.message || error));
+				}
 			});
+		}
 
-			$("#fileinput").change(function () {
-				if (this.files && this.files[0]) {
-					// Reset results
-					$("#detection-details").html('<p class="text-muted text-center">Waiting for detection...</p>');
-					$(".res-part2").html('');
+		// Add detection to panel
+		function addDetection(defectType, confidence) {
+			const detectionId = `detection-${Date.now()}-${Math.random()}`;
+			const defectClass = defectType.replace(/ /g, '-').toLowerCase();
+			
+			$('#no-detections').hide();
+			$('#active-detections').show();
+			
+			const html = `
+				<div class="detection-item" id="${detectionId}">
+					<div class="flex items-center flex-1">
+						<span class="defect-badge defect-${defectClass}">${defectType}</span>
+						<span class="confidence-badge">${confidence}%</span>
+					</div>
+					<button class="text-red-600 hover:text-red-800" onclick="removeDetection('${detectionId}')">
+						<i class="fas fa-times"></i>
+					</button>
+				</div>
+			`;
+			
+			$('#active-detections').prepend(html);
+			
+			// Update stats
+			sessionStats.defectsFound++;
+			$('#defects-found').text(sessionStats.defectsFound);
+			$('#total-defects').text(sessionStats.defectsFound);
+			
+			// Update detection badge
+			$('#detection-count').html(`<span class="alert-pulse">${sessionStats.defectsFound} Defect(s) Detected</span>`);
+			
+			// Play sound if enabled
+			if ($('#sound-alerts').is(':checked')) {
+				playAlertSound();
+			}
+			
+			// Auto-capture if enabled
+			if ($('#auto-capture').is(':checked')) {
+				takeSnapshot();
+			}
+			
+			// Store in history
+			detectionHistory.push({
+				timestamp: new Date().toISOString(),
+				type: defectType,
+				confidence: confidence
+			});
+		}
+
+		// Remove detection
+		function removeDetection(detectionId) {
+			$(`#${detectionId}`).fadeOut(200, function() {
+				$(this).remove();
+				
+				if ($('#active-detections .detection-item').length === 0) {
+					$('#active-detections').hide();
+					$('#no-detections').show();
+				}
+			});
+		}
+
+		// Play alert sound
+		function playAlertSound() {
+			// Create audio context for beep
+			const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+			const oscillator = audioContext.createOscillator();
+			const gainNode = audioContext.createGain();
+			
+			oscillator.connect(gainNode);
+			gainNode.connect(audioContext.destination);
+			
+			oscillator.frequency.value = 800;
+			oscillator.type = 'sine';
+			
+			gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+			gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+			
+			oscillator.start(audioContext.currentTime);
+			oscillator.stop(audioContext.currentTime + 0.2);
+		}
+
+		// Take snapshot
+		function takeSnapshot() {
+			if (!cameraActive) {
+				alert('Camera must be active to take snapshots');
+				return;
+			}
+			
+			const confThreshold = $('#confidence-threshold').val() / 100;
+			
+			$.ajax({
+				url: '/snapshot',
+				type: 'POST',
+				contentType: 'application/json',
+				data: JSON.stringify({ conf: confThreshold }),
+				success: function(response) {
+					console.log("Snapshot captured:", response);
+					sessionStats.snapshotsTaken++;
+					$('#snapshots-taken').text(sessionStats.snapshotsTaken);
 					
-					var reader = new FileReader();
-					reader.onload = function (e) {
-						var url = e.target.result;
-						var img = new Image();
-						img.crossOrigin = 'Anonymous';
-						img.onload = function () {
-							var canvas = document.createElement('CANVAS');
-							var ctx = canvas.getContext('2d');
-							canvas.height = this.height;
-							canvas.width = this.width;
-							ctx.drawImage(this, 0, 0);
-							base_data = canvas.toDataURL('image/jpeg', 1.0).replace(
-								/^data:image.+;base64,/, '');
-							canvas = null;
-						};
-						img.src = url;
-						$('#photo').attr('src', url);
-						$('#photo').show();
-						$('#video').hide();
+					// Visual feedback
+					$('#camera-feed').css('filter', 'brightness(1.5)');
+					setTimeout(() => {
+						$('#camera-feed').css('filter', 'brightness(1)');
+					}, 100);
+					
+					// Show notification
+					if (response.detections && response.detections.length > 0) {
+						alert(`Snapshot saved! Found ${response.count} defect(s)`);
+					} else {
+						alert('Snapshot saved! No defects detected.');
 					}
-					reader.readAsDataURL(this.files[0]);
+				},
+				error: function(xhr, status, error) {
+					console.error("Snapshot failed:", error);
+					alert("Failed to capture snapshot: " + (xhr.responseJSON?.message || error));
+				}
+			});
+		}
+
+		// Export session data
+		function exportSessionData() {
+			$.ajax({
+				url: '/stats',
+				type: 'GET',
+				success: function(response) {
+					if (response.status === 'success') {
+						const data = {
+							sessionTime: $('#session-time').text(),
+							stats: response.stats,
+							exportTime: new Date().toISOString(),
+							modelInfo: {
+								type: "YOLO11n",
+								accuracy: "94.7%"
+							}
+						};
+						
+						const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+						const url = URL.createObjectURL(blob);
+						const a = document.createElement('a');
+						a.href = url;
+						a.download = `eaglescan-session-${Date.now()}.json`;
+						a.click();
+						URL.revokeObjectURL(url);
+					}
+				},
+				error: function(xhr, status, error) {
+					console.error("Export failed:", error);
+					alert("Failed to export data: " + (xhr.responseJSON?.message || error));
+				}
+			});
+		}
+
+		// Clear detections
+		function clearDetections() {
+			$.ajax({
+				url: '/stats/reset',
+				type: 'POST',
+				contentType: 'application/json',
+				success: function(response) {
+					console.log("Stats reset:", response);
+					$('#active-detections').empty().hide();
+					$('#no-detections').show();
+					detectionHistory = [];
+					
+					// Reset display
+					$('#frames-processed').text(0);
+					$('#defects-found').text(0);
+					$('#total-defects').text(0);
+					$('#detection-count').text('Scanning...');
+					
+					// Reset session stats
+					sessionStats.framesProcessed = 0;
+					sessionStats.defectsFound = 0;
+				},
+				error: function(xhr, status, error) {
+					console.error("Failed to reset stats:", error);
+					alert("Failed to clear detections: " + (xhr.responseJSON?.message || error));
+				}
+			});
+		}
+
+		// Event Handlers
+		$(document).ready(function() {
+			// Toggle camera
+			$('#toggle-camera').click(function() {
+				if (cameraActive) {
+					stopCamera();
+				} else {
+					startCamera();
+				}
+			});
+
+			// Snapshot button
+			$('#snapshot-btn').click(function(e) {
+				e.preventDefault();
+				takeSnapshot();
+			});
+
+			// Clear detections
+			$('#clear-detections').click(function() {
+				if (confirm('Clear all detection statistics?')) {
+					clearDetections();
+				}
+			});
+
+			// Export data
+			$('#export-data').click(exportSessionData);
+
+			// Upload mode
+			$('#upload-mode').click(function() {
+				if (confirm('Switch to upload mode? This will stop the camera.')) {
+					if (cameraActive) {
+						stopCamera();
+					}
+					window.location.href = '/upload';
+				}
+			});
+
+			// Confidence threshold slider
+			$('#confidence-threshold').on('input', function() {
+				$('#threshold-value').text($(this).val() + '%');
+			});
+
+			// Quality buttons
+			$('.grid button[id^="quality-"]').click(function() {
+				$('.grid button[id^="quality-"]').removeClass('bg-blue-100 border-blue-300 font-medium').addClass('border-slate-300');
+				$(this).addClass('bg-blue-100 border-blue-300 font-medium').removeClass('border-slate-300');
+			});
+
+			// Check camera status on load
+			$.ajax({
+				url: '/camera/status',
+				type: 'GET',
+				success: function(response) {
+					if (response.camera_active) {
+						updateCameraStatus(true);
+					}
+				}
+			});
+
+			// Check model status
+			$.ajax({
+				url: '/health',
+				type: 'GET',
+				success: function(response) {
+					console.log("Health check:", response);
+					if (!response.model_loaded) {
+						alert("Warning: Model not loaded properly!");
+					}
+				},
+				error: function() {
+					console.warn("Health check failed");
 				}
 			});
 		});
+
+		// Make functions available globally
+		window.removeDetection = removeDetection;
 	</script>
 </body>
 

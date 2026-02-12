@@ -6,7 +6,7 @@ from pathlib import Path
 
 from eaglescan.exception import AppException
 from eaglescan.logger import logging
-
+import cv2
 
 def read_yaml_file(file_path: str) -> dict:
     try:
@@ -52,5 +52,28 @@ def encodeImageIntoBase64(croppedImagePath):
     with open(croppedImagePath, "rb") as f:
         return base64.b64encode(f.read())
 
-    
+
+
+def generate_frames():
+    cap = cv2.VideoCapture(0)
+
+    while True:
+        success, frame = cap.read()
+        if not success:
+            break
+
+        # Run YOLO prediction on frame
+        results = clApp.model.predict(source=frame, conf=0.25, iou=0.7)
+
+        annotated_frame = results[0].plot()
+
+        # Encode frame as JPEG
+        ret, buffer = cv2.imencode('.jpg', annotated_frame)
+        frame_bytes = buffer.tobytes()
+
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
+
+    cap.release()
+
     
